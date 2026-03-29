@@ -1,0 +1,27 @@
+[
+  {
+    "id": "3b93caa3-d870-4a32-91e8-bae71f2b1b50",
+    "imageUrl": "https://res.cloudinary.com/dqdwpavvl/image/upload/v1774821884/skins/108115856/tnjaqifcobvckariwtll.png",
+    "cloudinaryId": "skins/108115856/tnjaqifcobvckariwtll",
+    "name": "Snowrunner",
+    "description": "",
+    "characterName": "virxens",
+    "characterId": 108115856,
+    "uid": "eve_108115856",
+    "createdAt": "2026-03-29T22:04:45.821Z",
+    "additionalImages": [
+      {
+        "url": "https://res.cloudinary.com/dqdwpavvl/image/upload/v1774823386/skins/108115856/3b93caa3-d870-4a32-91e8-bae71f2b1b50/vu19oewg0rbinvgywyku.png",
+        "cloudinaryId": "skins/108115856/3b93caa3-d870-4a32-91e8-bae71f2b1b50/vu19oewg0rbinvgywyku"
+      },
+      {
+        "url": "https://res.cloudinary.com/dqdwpavvl/image/upload/v1774823621/skins/108115856/3b93caa3-d870-4a32-91e8-bae71f2b1b50/dwdfbyrchuw8hhcfehu9.png",
+        "cloudinaryId": "skins/108115856/3b93caa3-d870-4a32-91e8-bae71f2b1b50/dwdfbyrchuw8hhcfehu9"
+      },
+      {
+        "url": "https://res.cloudinary.com/dqdwpavvl/image/upload/v1774823635/skins/108115856/3b93caa3-d870-4a32-91e8-bae71f2b1b50/vyx9kbewsxnerea7kugr.png",
+        "cloudinaryId": "skins/108115856/3b93caa3-d870-4a32-91e8-bae71f2b1b50/vyx9kbewsxnerea7kugr"
+      }
+    ]
+  }
+]
