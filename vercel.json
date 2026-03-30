@@ -1,6 +1,7 @@
 {
   "version": 2,
   "routes": [
+    { "src": "/api/users/search", "dest": "/api/users/search.ts" },
     { "src": "/api/auth/eve/callback", "dest": "/api/auth/eve/callback.ts" },
     { "src": "/api/auth/eve/url", "dest": "/api/auth/eve/url.ts" },
     { "src": "/api/auth/me", "dest": "/api/auth/me.ts" },
