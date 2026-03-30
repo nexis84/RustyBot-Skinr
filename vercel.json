@@ -1,13 +1,12 @@
 {
-  "version": 2,
-  "routes": [
-    { "src": "/api/skins/character/(.*)", "dest": "/api/skins/character.ts?id=$1" },
-    { "src": "/api/users/search", "dest": "/api/users/search.ts" },
-    { "src": "/api/auth/eve/callback", "dest": "/api/auth/eve/callback.ts" },
-    { "src": "/api/auth/eve/url", "dest": "/api/auth/eve/url.ts" },
-    { "src": "/api/auth/me", "dest": "/api/auth/me.ts" },
-    { "src": "/api/skins", "dest": "/api/skins.ts" },
-    { "src": "/pilot/(.*)", "dest": "/dist/index.html" },
-    { "src": "/(.*)", "dest": "/dist/$1" }
+  "rewrites": [
+    { "source": "/api/skins/character/:id", "destination": "/api/skins/character.ts" },
+    { "source": "/api/users/search", "destination": "/api/users/search.ts" },
+    { "source": "/api/auth/eve/callback", "destination": "/api/auth/eve/callback.ts" },
+    { "source": "/api/auth/eve/url", "destination": "/api/auth/eve/url.ts" },
+    { "source": "/api/auth/me", "destination": "/api/auth/me.ts" },
+    { "source": "/api/skins", "destination": "/api/skins.ts" },
+    { "source": "/pilot/:id", "destination": "/dist/index.html" },
+    { "source": "/(.*)", "destination": "/dist/$1" }
   ]
 }
