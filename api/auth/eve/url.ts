@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing origin parameter' });
     }
 
-    const redirectUri = `${origin}/auth/eve/callback`;
+    const redirectUri = `${origin}/api/auth/eve/callback`;
     
     // DEBUG: Log what's being sent
     console.log('EVE Auth Debug:');
