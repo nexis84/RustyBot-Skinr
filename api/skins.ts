@@ -1,19 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { v4 as uuidv4 } from 'uuid';
-
-// Check DATABASE_URL before importing DB functions
-if (!process.env.DATABASE_URL) {
-  console.error('FATAL: DATABASE_URL environment variable is not set');
-}
-
-// Lazy import to avoid crashing on module load
-let dbModule: any = null;
-async function getDbModule() {
-  if (!dbModule) {
-    dbModule = await import('../src/db');
-  }
-  return dbModule;
-}
+import { getAllSkins, createSkin } from '../src/db';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -25,18 +12,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).end();
   }
 
-  // Check DATABASE_URL
-  if (!process.env.DATABASE_URL) {
-    console.error('[/api/skins] DATABASE_URL not set');
-    return res.status(500).json({ 
-      error: 'Server configuration error: DATABASE_URL not set',
-      details: 'Please set the DATABASE_URL environment variable in Vercel'
-    });
-  }
+  console.log('[/api/skins] Received request:', req.method);
+  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
 
   if (req.method === 'GET') {
     try {
-      const { getAllSkins } = await getDbModule();
       const skins = await getAllSkins();
       res.status(200).json(skins);
     } catch (error: any) {
@@ -45,7 +25,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { createSkin } = await getDbModule();
       const { imageUrl, cloudinaryId, name, description, characterName, characterId, uid } = req.body;
       
       if (!imageUrl || !cloudinaryId || !characterName || !characterId || !uid) {
