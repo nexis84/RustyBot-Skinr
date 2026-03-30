@@ -74,7 +74,12 @@ export default function App() {
     // Listen for EVE SSO success message
     const handleMessage = async (event: MessageEvent) => {
       const origin = event.origin;
-      if (!origin.endsWith('.run.app') && !origin.includes('localhost')) return;
+      // Allow postMessage from Render domain and localhost
+      if (
+        !origin.endsWith('.run.app') &&
+        !origin.includes('localhost') &&
+        !origin.includes('render.com')
+      ) return;
 
       if (event.data?.type === 'EVE_AUTH_SUCCESS') {
         const { character } = event.data;
