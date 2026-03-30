@@ -1,6 +1,7 @@
 {
   "version": 2,
   "routes": [
+    { "src": "/api/skins/character/([^/]+)", "dest": "/api/skins/character.ts?id=$1" },
     { "src": "/api/users/search", "dest": "/api/users/search.ts" },
     { "src": "/api/auth/eve/callback", "dest": "/api/auth/eve/callback.ts" },
     { "src": "/api/auth/eve/url", "dest": "/api/auth/eve/url.ts" },
