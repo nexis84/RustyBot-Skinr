@@ -1,3 +1,10 @@
+# Ignore environment files with secrets or real values
+.env
+env.render.txt
+.env.vercel.example
+# Ignore environment files with secrets
+.env
+env.render.txt
 node_modules/
 build/
 dist/
