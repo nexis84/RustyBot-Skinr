@@ -23,11 +23,17 @@ export const UserProfile: React.FC<UserProfileProps> = ({ characterId, onBack, o
 
   const fetchProfile = async () => {
     try {
+      console.log('Fetching profile for characterId:', characterId);
       const response = await fetch(`/api/skins/character/${characterId}`);
+      console.log('Profile response status:', response.status, 'ok:', response.ok);
       if (response.ok) {
         const data = await response.json();
+        console.log('Profile data received:', data);
         setSkins(data.skins);
         setCharacter(data.character);
+        console.log('Character set to:', data.character);
+      } else {
+        console.error('Profile response not ok:', response.statusText);
       }
     } catch (err) {
       console.error('Error fetching profile:', err);
