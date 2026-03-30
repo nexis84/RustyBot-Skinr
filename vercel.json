@@ -2,6 +2,18 @@
   "version": 2,
   "routes": [
     {
+      "src": "/api/auth/eve/url",
+      "dest": "/api/auth/eve/url.ts"
+    },
+    {
+      "src": "/api/auth/me",
+      "dest": "/api/auth/me.ts"
+    },
+    {
+      "src": "/api/skins",
+      "dest": "/api/skins.ts"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/$1.ts"
     },
