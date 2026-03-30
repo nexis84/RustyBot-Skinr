@@ -27,6 +27,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const redirectUri = `${origin}/auth/eve/callback`;
+    
+    // DEBUG: Log what's being sent
+    console.log('EVE Auth Debug:');
+    console.log('  origin:', origin);
+    console.log('  redirectUri:', redirectUri);
+    console.log('  clientId:', clientId ? 'Set' : 'Missing');
 
     const params = new URLSearchParams({
       response_type: 'code',
@@ -37,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     const url = `https://login.eveonline.com/v2/oauth/authorize?${params.toString()}`;
-    res.status(200).json({ url });
+    res.status(200).json({ url, debug: { redirectUri, origin } });
   } catch (error: any) {
     console.error('Error generating EVE auth URL:', error);
     res.status(500).json({ error: 'Failed to generate auth URL', details: error.message });
