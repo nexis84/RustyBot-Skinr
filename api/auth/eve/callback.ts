@@ -38,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const currentOrigin = origin || 'https://rusty-bot-skinr.vercel.app';
-  const redirectUri = `${currentOrigin}/auth/eve/callback`;
+  const redirectUri = `${currentOrigin}/api/auth/eve/callback`;
 
   // DEBUG logging
   console.log('EVE Callback Debug:');
