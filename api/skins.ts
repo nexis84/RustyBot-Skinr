@@ -1,8 +1,16 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { v4 as uuidv4 } from 'uuid';
 import pg from 'pg';
+import { v2 as cloudinary } from 'cloudinary';
 
 const { Pool } = pg;
+
+// Cloudinary config
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -100,21 +108,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { imageUrl, cloudinaryId, name, description, characterName, characterId, uid } = req.body;
+      const { imageUrl, name, description, characterName, characterId } = req.body;
       
-      if (!imageUrl || !cloudinaryId || !characterName || !characterId || !uid) {
+      if (!imageUrl || !characterName || !characterId) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
 
+      // Upload to Cloudinary
+      console.log('Uploading to Cloudinary...');
+      const uploadResult = await cloudinary.uploader.upload(imageUrl, {
+        folder: `skins/${characterId}`,
+        resource_type: 'image'
+      });
+      console.log('Cloudinary upload complete:', uploadResult.public_id);
+
       const skin = {
         id: uuidv4(),
-        imageUrl,
-        cloudinaryId,
+        imageUrl: uploadResult.secure_url,
+        cloudinaryId: uploadResult.public_id,
         name: name || 'Unnamed Skin',
         description: description || '',
         characterName,
         characterId,
-        uid
+        uid: `eve_${characterId}`
       };
 
       const result = await createSkin(skin);
