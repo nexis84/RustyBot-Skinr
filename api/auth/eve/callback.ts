@@ -34,14 +34,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!clientId || !clientSecret) {
     console.error('EVE_CLIENT_ID or EVE_CLIENT_SECRET not set');
-    return res.status(500).send('Server configuration error');
+    return res.status(500).send(`Server configuration error: ${!clientId ? 'EVE_CLIENT_ID' : 'EVE_CLIENT_SECRET'} not set`);
   }
 
   const currentOrigin = origin || 'https://rusty-bot-skinr.vercel.app';
   const redirectUri = `${currentOrigin}/auth/eve/callback`;
 
+  // DEBUG logging
+  console.log('EVE Callback Debug:');
+  console.log('  code:', code ? 'Present (length: ' + (code as string).length + ')' : 'Missing');
+  console.log('  origin:', origin);
+  console.log('  redirectUri:', redirectUri);
+  console.log('  clientId:', clientId ? 'Set' : 'Missing');
+  console.log('  clientSecret:', clientSecret ? 'Set (length: ' + clientSecret.length + ')' : 'Missing');
+
   try {
     const authHeader = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
+    console.log('  authHeader length:', authHeader.length);
+    console.log('  Making token request to EVE...');
 
     const tokenResponse = await axios.post(
       'https://login.eveonline.com/v2/oauth/token',
@@ -57,6 +68,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
       }
     );
+
+    console.log('  Token response received');
 
     const { access_token } = tokenResponse.data;
 
