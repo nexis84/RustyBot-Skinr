@@ -71,6 +71,12 @@ export default function App() {
     checkSession();
     fetchSkins();
 
+    // Check for /pilot/:id in URL
+    const pathMatch = window.location.pathname.match(/\/pilot\/(\d+)/);
+    if (pathMatch) {
+      setViewingProfile(pathMatch[1]);
+    }
+
     // Listen for EVE SSO success message
     const handleMessage = async (event: MessageEvent) => {
       const origin = event.origin;
