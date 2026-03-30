@@ -30,7 +30,7 @@ const __dirname = path.dirname(__filename);
 
 async function startServer() {
   const app = express();
-  const PORT = process.env.PORT || 3000;
+  const PORT = parseInt(process.env.PORT || '3000', 10);
 
   app.set('trust proxy', 1);
 
@@ -64,103 +64,12 @@ async function startServer() {
   // Get all skins
   app.get('/api/skins', async (req, res) => {
     try {
-      const snapshot = await db.collection('skins').orderBy('createdAt', 'desc').get();
-      const skins = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const { getAllSkins } = await import('./src/db');
+      const skins = await getAllSkins();
       res.json(skins);
     } catch (error: any) {
       console.error('Error fetching skins:', error);
-      res.status(500).json({ error: 'Failed to fetch skins' });
-    }
-  });
-
-  // Upload a skin
-  app.post('/api/skins', async (req, res) => {
-    const character = (req.session as any).character;
-    console.log('Upload request received. Session character:', character);
-    
-    if (!character) {
-      console.warn('Unauthorized upload attempt. Session ID:', req.sessionID);
-      return res.status(401).json({ error: 'UNAUTHORIZED: Please login with EVE SSO' });
-    }
-
-    try {
-      const { imageUrl, description } = req.body; // imageUrl is base64
-      
-      if (!imageUrl || typeof imageUrl !== 'string') {
-        return res.status(400).json({ error: 'INVALID_PAYLOAD: imageUrl is required' });
-      }
-
-      console.log('Starting upload for character:', character.id);
-      
-      // 1. Convert base64 to buffer
-      const base64Data = imageUrl.replace(/^data:image\/\w+;base64,/, '');
-      const buffer = Buffer.from(base64Data, 'base64');
-      const mimeType = imageUrl.match(/^data:(image\/\w+);base64,/)?.[1] || 'image/png';
-      
-      // 2. Upload to Firebase Storage
-      const extension = mimeType.split('/')[1] || 'png';
-      const fileName = `skins/${character.id}/${uuidv4()}.${extension}`;
-      const file = bucket.file(fileName);
-      
-      console.log('Uploading to bucket:', bucket.name, 'path:', fileName);
-      
-      // Upload a skin (Cloudinary)
-      app.post('/api/skins', upload.none(), async (req, res) => {
-        const character = (req.session as any).character;
-        console.log('Upload request received. Session character:', character);
-    
-        if (!character) {
-          console.warn('Unauthorized upload attempt. Session ID:', req.sessionID);
-          return res.status(401).json({ error: 'UNAUTHORIZED: Please login with EVE SSO' });
-        }
-
-        try {
-          const { imageUrl, description } = req.body; // imageUrl is base64
-      
-          if (!imageUrl || typeof imageUrl !== 'string') {
-            return res.status(400).json({ error: 'INVALID_PAYLOAD: imageUrl is required' });
-          }
-
-          console.log('Starting upload for character:', character.id);
-
-          // 1. Convert base64 to buffer
-          const base64Data = imageUrl.replace(/^data:image\/\w+;base64,/, '');
-          const buffer = Buffer.from(base64Data, 'base64');
-          const mimeType = imageUrl.match(/^data:(image\/\w+);base64,/)?.[1] || 'image/png';
-
-          // 2. Upload to Cloudinary
-          const uploadStream = cloudinary.uploader.upload_stream({
-            folder: `skins/${character.id}`,
-            resource_type: 'image',
-            format: mimeType.split('/')[1] || 'png',
-          }, async (error, result) => {
-            if (error) {
-              console.error('Cloudinary upload error:', error);
-              return res.status(500).json({ error: 'Failed to upload image to Cloudinary' });
-            }
-            // 3. Store metadata (for now, just return the Cloudinary URL)
-            const newSkin = {
-              imageUrl: result.secure_url,
-              cloudinaryId: result.public_id,
-              description: description || '',
-              characterName: character.name,
-              characterId: parseInt(character.id),
-              uid: `eve_${character.id}`,
-              createdAt: new Date().toISOString()
-            };
-            // TODO: Store newSkin in a database if needed
-            res.json({ ...newSkin });
-          });
-          streamifier.createReadStream(buffer).pipe(uploadStream);
-        } catch (error: any) {
-          console.error('Error uploading skin:', error);
-          res.status(500).json({ error: `Failed to upload skin: ${error.message}` });
-        }
-      });
-      res.json({ success: true });
-    } catch (error: any) {
-      console.error('Error deleting skin:', error);
-      res.status(500).json({ error: 'Failed to delete skin' });
+      res.status(500).json({ error: 'Failed to fetch skins', details: error.message });
     }
   });
 
