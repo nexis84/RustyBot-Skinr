@@ -257,11 +257,24 @@ async function startServer() {
           return res.status(500).send('Failed to save session');
         }
 
-        // Send success message to parent window and close popup
+        // Send postMessage to opener window with character data and close popup
         res.send(`
           <html>
             <body style="background: #050505; color: #ffcc00; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh;">
               <div style="text-align: center;">
+                <script>
+                  if (window.opener) {
+                    window.opener.postMessage({
+                      type: 'EVE_AUTH_SUCCESS',
+                      character: {
+                        id: '${characterId}',
+                        name: '${characterName}',
+                        portraitUrl: '${portraitUrl}'
+                      }
+                    }, '*');
+                    window.close();
+                  }
+                </script>
                 <h2 style="letter-spacing: 0.2em;">IDENTITY_VERIFIED</h2>
                 <p style="font-size: 10px; opacity: 0.5;">TRANSMITTING_DATA_TO_TERMINAL...</p>
                 <script>
